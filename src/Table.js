@@ -1,14 +1,64 @@
 // Table.js
-
-import React, {useEffect} from "react";
-import { Label, Input, Button } from "reactstrap";
-import { useSortBy, useTable, usePagination, useFilters, useGlobalFilter, useAsyncDebounce,  } from "react-table";
-import { GlobalFilter, DefaultFilterForColumn} from "./Filter";
-import Modal from 'react-bootstrap/Modal'
 import styled from 'styled-components'
+import React, {useEffect} from "react";
+import { useSortBy, useTable, usePagination, useFilters, useGlobalFilter, useAsyncDebounce, useExpanded } from "react-table";
+import { GlobalFilter, DefaultFilterForColumn} from "./Filter";
 import matchSorter from 'match-sorter'
 
-export default function Table({ columns, data, modalVisible, setModalVisible, filterVar, setFilterVar, thisMin, thisMax, stateHolder, setAccessVar, accessVar}) {
+
+const Styles = styled.div`
+  /* This is required to make the table full-width */
+  display: block;
+  max-width: 100%;
+
+  /* This will make the table scrollable when it gets too small */
+  .tableWrap {
+    display: block;
+    max-width: 100%;
+    overflow-x: scroll;
+    overflow-y: hidden;
+  }
+
+  table {
+    /* Make sure the inner table is always as wide as needed */
+    width: 100%;
+    border-spacing: 0;
+
+    tr {
+      :last-child {
+        td {
+          border-bottom: 0;
+        }
+      }
+    }
+
+    th,
+    td {
+      margin: 0;
+      padding: 0.5rem;
+      border-bottom: 1px solid black;
+      border-right: 1px solid black;
+
+      /* The secret sauce */
+      /* Each cell should grow equally */
+      width: 1%;
+      /* But "collapsed" cells should be as small as possible */
+      &.collapse {
+        width: 0.0000000001%;
+      }
+
+      :last-child {
+        border-right: 0;
+      }
+    }
+  }
+
+  .pagination {
+    padding: 0.5rem;
+  }
+`
+
+export default function Table({ columns, data, modalVisible, setModalVisible, filterVar, setFilterVar, thisMin, thisMax, stateHolder, setAccessVar, accessVar, setCurRowLength}) {
   
   // Use the useTable Hook to send the columns and data to build the table
   const {
@@ -19,37 +69,37 @@ export default function Table({ columns, data, modalVisible, setModalVisible, fi
     pageCount, // Prepare the row (this function needs to be called for each row before getting the row props)
     pageOptions,
     page,
-    state: { pageIndex, pageSize, sortBy, filters },
+    rows,
+    state: { pageIndex, pageSize, sortBy, filters,  },
     gotoPage,
     previousPage,
     nextPage,
     setPageSize,
     canPreviousPage,
     canNextPage,
-    visibleColumns,
     setGlobalFilter,
     preGlobalFilteredRows,
     setFilter,
-    filterSet=new Set(['total_population', "median_household_income","mean_temp","rainfall","average_traffic_volume_per_meter_of_major_roadways","percent_some_college","violent_crime_rate"])
+    filterSet=new Set(['total_population', "median_household_income","mean_temp","rainfall","average_traffic_volume_per_meter_of_major_roadways","percent_some_college","violent_crime_rate"]),
   } = useTable({
     columns,
     data,
     defaultColumn: { Filter: DefaultFilterForColumn },
-    autoResetFilters: false
+    autoResetFilters: false,
+
 
   },
   useFilters,
   useGlobalFilter,
   useSortBy,
-  usePagination,
-  
-
+  usePagination
   
   );
 
   function RenderFilter(colVar) {
     if (filterSet.has(colVar.id)) {
-    return <Button variant="primary" onClick={() => {
+    return <div>
+    <button class="w-full bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" onClick={() => {
       stateHolder.forEach(thisAccess => {
         //console.log(thisAccess)
         if (thisAccess.accessor === colVar.id) {
@@ -57,10 +107,17 @@ export default function Table({ columns, data, modalVisible, setModalVisible, fi
         }
       })
       setModalVisible(true)}}>
-      Launch demo modal
-    </Button>
+        Filter
+    </button>
+    </div>
     }
   }
+
+
+  useEffect(() => {
+    //keep count of rows up to date
+    setCurRowLength(rows.length)
+  }, [rows])
 
   useEffect(() => {
     //console.log("filtervar: ", filterVar)
@@ -84,7 +141,7 @@ export default function Table({ columns, data, modalVisible, setModalVisible, fi
  
   return (
       <>
-      {/* Rendering Global Filter */}
+      {/* Rendering Global Filter 
       <pre>
         <code>
           {JSON.stringify(
@@ -95,6 +152,8 @@ export default function Table({ columns, data, modalVisible, setModalVisible, fi
               canNextPage,
               canPreviousPage,
               filters
+          
+              
             
             },
             null,
@@ -102,19 +161,24 @@ export default function Table({ columns, data, modalVisible, setModalVisible, fi
           )}
         </code>
       </pre>
+      */}
       <GlobalFilter
                preGlobalFilteredRows={preGlobalFilteredRows}
                globalFilter={filters.globalFilter}
                setGlobalFilter={setGlobalFilter}
              />
+  <Styles>
+      <div className="tableWrap">
+        <div class="relative">
+
     <table {...getTableProps()}>
     <thead>
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map(column => (
-                <th {...column.getHeaderProps()}>
-                  <div>
-                    <span {...column.getSortByToggleProps()}>
+                <th {...column.getHeaderProps()} class="font-extrabold sticky top-0">
+                    <span {...column.getSortByToggleProps()} >
+                    <div class="rounded-lg border-2 border-slate-600 hover:bg-white hover:opacity-40 p-1">
                       {column.render('Header')}
                       {/* Add a sort direction indicator */}
                       {column.isSorted
@@ -122,9 +186,10 @@ export default function Table({ columns, data, modalVisible, setModalVisible, fi
                           ? ' 🔽'
                           : ' 🔼'
                         : ''}
+                        </div>
                     </span>
                     
-                  </div>
+                  
                   {/* Render the columns filter UI 
                   <div>m
                       <Button variant="primary" onClick={() => {
@@ -140,9 +205,9 @@ export default function Table({ columns, data, modalVisible, setModalVisible, fi
 
                   </div>
                       */}
-                  <div>
+           
                     {RenderFilter(column)}
-                  </div>
+             
                 </th>
               ))}
             </tr>
@@ -152,19 +217,16 @@ export default function Table({ columns, data, modalVisible, setModalVisible, fi
         {page.map((row, i) => {
           prepareRow(row);
           return (
-            <tr {...row.getRowProps()}>
+            <tr {...row.getRowProps()} class="border-b dark:bg-gray-800 dark:border-gray-700 odd:bg-white even:bg-gray-50 odd:dark:bg-gray-800 even:dark:bg-gray-700 opacity-80 hover:opacity-100">
               {row.cells.map(cell => {
-                return <td {...cell.getCellProps()}style={{
-                    padding: '10px',
-                    border: 'solid 1px gray',
-                    background: 'papayawhip',
-                  }}>{cell.render("Cell")}</td>;
+                return <td {...cell.getCellProps()}>{cell.render("Cell")} </td>;
               })}
             </tr>
           );
         })}
       </tbody>
     </table>
+    </div>
     <div className="pagination">
     <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
       {'<<'}
@@ -208,7 +270,9 @@ export default function Table({ columns, data, modalVisible, setModalVisible, fi
         </option>
       ))}
     </select>
+    </div>
   </div>
+  </Styles>
   </>
   );
 }

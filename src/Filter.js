@@ -6,7 +6,7 @@ import ReactDOM from 'react-dom';
 import Nouislider from "nouislider-react";
 import "nouislider/distribute/nouislider.css";
 import Slider from "react-slider";
-import {stateObj} from './Components'
+import {stateObj, addCommas} from './Components'
 
 // Component for Global Filter
 export function GlobalFilter({ globalFilter, setGlobalFilter }) {
@@ -110,12 +110,10 @@ export function SliderColumnFilter({
         defaultValue={[thisData.currentMin, thisData.currentMax]}
         ariaLabel={['Lower thumb', 'Upper thumb']}
         ariaValuetext={state => `Thumb value ${state.valueNow}`}
-        renderThumb={(props, state) => <div {...props}>{state.valueNow}</div>}
+        renderThumb={(props, state) => <div {...props}>{state.valueNow.toLocaleString()}</div>}
         pearling
         onChange={([minValue, maxValue]) =>{
             setAccessVar(stateObj(thisData.accessor,thisData.originalMin,thisData.originalMax,minValue,maxValue))
-            setThisMin(minValue)
-            setThisMax(maxValue)
           }
         }
       />

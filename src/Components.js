@@ -1,3 +1,5 @@
+import { useMemo } from "react"
+
 export const stateObj = (accessor,originalMin, originalMax, currentMin, currentMax) => { return { accessor: accessor, originalMin: originalMin, originalMax: originalMax, currentMin: currentMin, currentMax: currentMax } }
 
 export function getMax(thisData, thisID) {
@@ -19,3 +21,8 @@ export function getMin(thisData, thisID) {
   return min
 }
 
+export function addCommas(num) {
+  console.log("data: ", num.cell.value.toLocaleString())
+  //const strLoop = num.toString()
+  return num.cell.value.toLocaleString()
+}

@@ -1,23 +1,22 @@
 .horizontal-slider {
   width: 100%;
-  max-width: 500px;
-  height: 50px;
-  border: 1px solid grey;
+  min-width: 100%;
+  height: 100px;
 }
 
 
 .example-thumb {
-  font-size: 0.1em;
+  font-size: 0.3em;
   text-align: center;
-  background-color: black;
+  background-color: #008793;
   color: white;
-  cursor: pointer;
-  border: 5px solid gray;
-  box-sizing: border-box;
+  cursor: grab;
+  border-radius: 90%;
+  box-sizing: content-box;
 }
 
 .example-thumb.active {
-  background-color: grey;
+  background-color: #010993;
 }
 
 .example-track {
@@ -26,33 +25,23 @@
 }
 
 .example-track.example-track-1 {
-  background: #f00;
-}
-
-.example-track.example-track-2 {
-  background: #0f0;
+  background: linear-gradient(to left top, #6bcfd1, #47c6dc, #28bce8, #2caff0, #51a0f2, #76a1f2, #91a2f0, #a8a3ed, #bfb9f2, #d5d0f6, #eae7fb, #ffffff);
 }
 
 .horizontal-slider .example-track {
-  top: 20px;
-  height: 10px;
+  top: 30px;
+  height: 20px;
 }
 
 .horizontal-slider .example-thumb {
   top: 1px;
-  width: 50px;
-  height: 48px;
-  line-height: 38px;
+  width: 80px;
+  height: 80px;
+  line-height: 70px;
+  font-size:0.2em;
 }
 
-.vertical-slider .example-thumb {
-  left: 1px;
-  width: 48px;
-  line-height: 40px;
-  height: 50px;
-}
 
-.vertical-slider .example-track {
-  left: 20px;
-  width: 10px;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
