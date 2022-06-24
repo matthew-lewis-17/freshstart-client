@@ -1,22 +1,32 @@
 import './App.css';
+import { AiOutlineGithub, AiFillLinkedin } from 'react-icons/ai'
+import {SiKaggle} from 'react-icons/si'
 
+//About page with project links at bottom
 function Homepage() {
   return (
       <>
-    <div className="Homepage">
-      Homepage
-    </div>
-    <div>
-    <a href="#" class="relative inline-flex items-center justify-start py-3 pl-4 pr-12 overflow-hidden font-semibold text-indigo-600 transition-all duration-150 ease-in-out rounded hover:pl-10 hover:pr-6 bg-gray-50 group">
-    <span class="absolute bottom-0 left-0 w-full h-1 transition-all duration-150 ease-in-out bg-indigo-600 group-hover:h-full"></span>
-    <span class="absolute right-0 pr-4 duration-200 ease-out group-hover:translate-x-12">
-    <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-    </span>
-    <span class="absolute left-0 pl-2.5 -translate-x-12 group-hover:translate-x-0 ease-out duration-200">
-    <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-    </span>
-    <span class="relative w-full text-left transition-colors duration-200 ease-in-out group-hover:text-white">Filter</span>
-    </a>
+    <div className="flex flex-col gap-6">
+        <div className="text-5xl text-black font-extrabold text-center">
+            Looking to escape the Bay Area or Seattle? FreshStart is what you're looking for!
+        </div>
+        <div className="rounded-lg bg-slate-300 text-2xl text-black font-extrabold text-center opacity-80">
+            Filter our detailed data set to find the perfect landing spot for you and your family. Discover affordable counties that fit all of your needs. Find the perfect place to raise your kids!
+        </div>
+        <div className="rounded-lg bg-slate-300 text-base text-black text-center opacity-80">
+            *This is v1.0.0 of this project, which is my first foray into JS, React, and full stack web development. Please reach out to me on LinkedIn or Github with any bug fixes, recommendations, ideas, or even entry level SWE positions that would be a good fit for me!
+        </div>
+        <div className='grid grid-cols-3 gap-4 place-items-center'>
+            <div className='hover:opacity-75'>
+                <a href="https://github.com/MLenterprises/freshstart-client" target="_blank"><AiOutlineGithub size={70}/></a>
+            </div>
+            <div className='hover:opacity-75'>
+                <a href="https://www.linkedin.com/in/matthew-lewis-239608170/" target="_blank"><AiFillLinkedin size={70}/></a>
+            </div>
+            <div className='hover:opacity-75'>
+                <a href="https://www.kaggle.com/datasets/matthewlewis17/freshstart-v1-data" target="_blank"><SiKaggle size={70}/></a>
+            </div>
+        </div>
     </div>
     </>
   );

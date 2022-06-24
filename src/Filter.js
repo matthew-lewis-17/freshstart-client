@@ -1,12 +1,9 @@
-import { React, useMemo, useState } from "react";
+import { React, useState } from "react";
 import { useAsyncDebounce } from "react-table";
-import { Label, Input, Button } from "reactstrap";
-import Modal from 'react-bootstrap/Modal'
-import ReactDOM from 'react-dom';
-import Nouislider from "nouislider-react";
+import { Input } from "reactstrap";
 import "nouislider/distribute/nouislider.css";
 import Slider from "react-slider";
-import {stateObj, addCommas} from './Components'
+import {stateObj} from './Components'
 
 // Component for Global Filter
 export function GlobalFilter({ globalFilter, setGlobalFilter }) {
@@ -18,14 +15,13 @@ export function GlobalFilter({ globalFilter, setGlobalFilter }) {
 
   return (
     <div>
-      <Label>Search Table: </Label>
       <Input
         value={value || ""}
         onChange={(e) => {
           setValue(e.target.value);
           onChange(e.target.value);
         }}
-        placeholder=" Enter value "
+        placeholder=" search table... "
         className="w-25"
         style={{
           fontSize: "1.1rem",
@@ -60,43 +56,7 @@ export function DefaultFilterForColumn({
 }
 
 
-
-// Component for Custom Select Filter
-export function SelectColumnFilter({
-  column: { filterValue, setFilter, preFilteredRows, id },
-}) {
-  // Use preFilteredRows to calculate the options
-  const options = useMemo(() => {
-    const options = new Set();
-    preFilteredRows.forEach((row) => {
-      options.add(row.values[id]);
-    });
-    return [...options.values()];
-  }, [id, preFilteredRows]);
-
-  // UI for Multi-Select box
-  return (
-    <select
-      value={filterValue}
-      onChange={(e) => {
-        setFilter(e.target.value || undefined);
-      }}
-    >
-      <option value="">All</option>
-      {options.map((option, i) => (
-        <option key={i} value={option}>
-          {option}
-        </option>
-      ))}
-    </select>
-  );
-}
-
-export function SliderColumnFilter({
-  thisData, filterVar, thisMin, thisMax, setThisMin, setThisMax, setAccessVar
-}) {
-  console.log("slider")
-  console.log(thisData)
+export function SliderColumnFilter({thisData, setAccessVar}) {
 
     return (
       <>
@@ -120,67 +80,7 @@ export function SliderColumnFilter({
       </div>
       </>
   )
-    } 
-
-  export function ButtonFilter({
-    column: { filterValue=[], setFilter, preFilteredRows, id, thisMin,thisMax,data, setModalVisible },
-  }){
-
-  const handleShow = () => setModalVisible(true);
- 
-  return (
-    <>
-      <Button variant="primary" onClick={handleShow}>
-        Launch demo modal
-      </Button>
-
-      </>
-  );
-  }
-    
-  
-  
-
-
-  export function NoUISliderComponent({
-  column: { filterValue=[], setFilter, preFilteredRows, id, thisMin,thisMax,data },
-}) {
-
-    let min = preFilteredRows.length ? preFilteredRows[0].values[id] : 0
-    let max = preFilteredRows.length ? preFilteredRows[0].values[id] : 0
-    preFilteredRows.forEach(row => {
-      min = Math.min(row.values[id], min)
-      max = Math.max(row.values[id], max)
-    })
-  
-    return (
-      <>
-      <div>
-          <Slider
-        className="horizontal-slider"
-        thumbClassName="example-thumb"
-        trackClassName="example-track"
-        min={min}
-        max={max}
-        defaultValue={[min, max]}
-        ariaLabel={['Lower thumb', 'Upper thumb']}
-        ariaValuetext={state => `Thumb value ${state.valueNow}`}
-        renderThumb={(props, state) => <div {...props}>{state.valueNow}</div>}
-        pearling
-        onAfterChange={([minValue, maxValue]) =>setFilter([minValue, maxValue])}
-      />
-      </div>
-      </>
-  )
-}
-
-  // Define a custom filter filter function!
-export function filterGreaterThan(rows, id, filterValue) {
-    return rows.filter(row => {
-      const rowValue = row.values[id]
-      return rowValue >= filterValue
-    })
-  }
+} 
 
   export function filterBetween(rows, id, filterValue) {
     return rows.filter(row => {
@@ -193,4 +93,3 @@ export function filterGreaterThan(rows, id, filterValue) {
   // when given the new filter value and returns true, the filter
   // will be automatically removed. Normally this is just an undefined
   // check, but here, we want to remove the filter if it's not a number
-  filterGreaterThan.autoRemove = val => typeof val !== 'number'

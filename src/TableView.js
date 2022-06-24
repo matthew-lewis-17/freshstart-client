@@ -1,63 +1,42 @@
 import Axios from 'axios'
-import React, { useState , useEffect, useMemo, useRef} from 'react';
+import React, { useState , useEffect, useMemo} from 'react';
 import './App.css';
 import Table from "./Table";
-import { SliderColumnFilter, filterGreaterThan, NoUISliderComponent, filterBetween, ButtonFilter } from "./Filter";
-import {Plane} from 'react-loader-spinner'
+import { SliderColumnFilter, filterBetween } from "./Filter";
 import Modal from 'react-modal';
-import { render } from 'react-dom';
 import {stateObj, getMax, getMin, addCommas} from './Components'
-import { data } from 'autoprefixer';
 
 
 function TableView() {
+  //Filtering modal styling parameters
   const customStyles = {
-    overlay: {
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      backgroundColor: 'rgba(255, 255, 255, 0.75)'
-    },
     content: {
-      position: 'absolute',
-      top: '300px',
-      left: '40px',
-      right: '40px',
-      bottom: '350px',
-      border: '1px solid #ccc',
-      background: '#fff',
-      overflow: 'auto',
-      WebkitOverflowScrolling: 'touch',
-      borderRadius: '4px',
-      outline: 'none',
-      padding: '20px'
-    }
+      maxHeight: '50%',
+      textAlign: 'center'
+    },
   };
+  //Holder used to hold all of filtering states
   const [stateHolder, setStateHolder] = useState([])
   const [isLoading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false)
+  //Holds all data from database
   const [countyList, setCountyList] = useState([]);
-  const [filterVar, setFilterVar] = useState("");
-  const [thisMin, setThisMin]=useState(0)
-  const [thisMax, setThisMax]=useState(1)
   const [accessVar, setAccessVar]=useState(stateObj('',0,0,0,0))
   const [curRowLength, setCurRowLength] = useState(0)
 
+  //empty useEffecr dependency automatically fetches data from API on load
   useEffect(()=>{
     if (countyList.length < 1) {
     Axios.get('http://localhost:3001/api/get').then((response)=> {
       setCountyList(response.data)
-      console.log(response.data[1])
+      //console.log(response.data[1])
       setLoading(false);
-      setFilterVar("")
     })
   }
   },[])
 
+  //maps initial columns with their min and maxes to an object and pushes them to the state holder array for filtering
   useEffect(()=>{
-    console.log('huh')
     if (countyList.length >0) {
       const tmp = []
       const mySet1 = new Set("id")
@@ -65,22 +44,39 @@ function TableView() {
         if (!mySet1.has(key)) {
           mySet1.add(key)
           tmp.push(stateObj(key,getMin(countyList,key),getMax(countyList,key),getMin(countyList,key),getMax(countyList,key)))
-          console.log(tmp)
+          //console.log(tmp)
         }
       }
       setStateHolder(tmp)
-      console.log(stateHolder)
+      //console.log(stateHolder)
     }
   },[countyList])
 
+  //Displays data currently being filtered within modal
+  function getHeader(aVar) {
+    let thisHead=""
+    columns.forEach(thisCol =>{
+      if(thisCol.accessor===aVar.accessor) {
+        thisHead=thisCol.Header
+      }
+    })
+    return ("Filtering by " + thisHead)
+  }
+
+  //when modal state changes, if it changes to be closed, update holder array to final filter value from modal and store it
+  useEffect(()=>{
+    if(modalVisible===false) {
+      //console.log("trying to update cur vals in holder array")
+        let newHolder=[...stateHolder]
+        let thisInd=stateHolder.findIndex(x=> x.accessor===accessVar.accessor)
+        newHolder[thisInd]=accessVar
+        setStateHolder(newHolder)
+    }
+  },[modalVisible])
   
+  //initialize columns for table
   const columns = useMemo(
     () => [
-      {
-        // first group - TV Show
-        Header: "County Data",
-        // First group columns
-        columns: [
           {
             Header: "County",
             accessor: "county",
@@ -92,7 +88,6 @@ function TableView() {
           {
             Header: "Population",
             accessor: "total_population",
-            Filter: ButtonFilter,
             filter: filterBetween,
             Cell: data => useMemo(() => addCommas(data), [data])
 
@@ -100,87 +95,71 @@ function TableView() {
           {
             Header: "Median Household Income",
             accessor: "median_household_income",
-            Filter: NoUISliderComponent,
             filter: filterBetween,
             Cell: data => useMemo(() => addCommas(data), [data])
 
-            //thisMin:minTotalByName(countyList,"median_household_income"),
           },
           {
             Header: "Average Temperature (°F)",
             accessor: "mean_temp",
-            Filter: NoUISliderComponent,
             filter: filterBetween,
 
           },
           {
             Header: "Annual Rainfall (in.)",
             accessor: "rainfall",
-            Filter: NoUISliderComponent,
             filter: filterBetween,
 
           },
           {
-            Header: "Volume of Traffic",
-            accessor: "average_traffic_volume_per_meter_of_major_roadways",
-            Filter: NoUISliderComponent,
+            Header: "Percent Unemployment",
+            accessor: "percent_unemployed_CDC",
             filter: filterBetween,
-
           },
           {
             Header: "Percent College Graduates",
             accessor: "percent_some_college",
-            Filter: NoUISliderComponent,
             filter: filterBetween,
           },
           {
-            Header: "Violent Crime Rate",
-            accessor: "violent_crime_rate",
-            Filter: NoUISliderComponent,
+            Header: "Volume of Traffic Percentile",
+            accessor: "average_traffic_volume_per_meter_of_major_roadways",
             filter: filterBetween,
 
           },
-        ]
-      },
-    ],
+        ],
     []
   );
 
+//loading animation
 if (isLoading){
-  return <div> 
-  <Plane ariaLabel="loading-indicator" />
-  </div>;
+  return <div className='text-center'>
+  <svg role="status" className="inline w-16 h-16 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-green-500" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+  <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+</svg>
+</div>
 }
 
+//render Modal if open and Table with parameters
 return (
   <div>
     <div>
-      <Modal isOpen={modalVisible} onRequestClose={() => setModalVisible(false)} style={customStyles}>
-      <div class="bg-[url('coolbackgroundbw.png')] absolute inset-0">
-        <div class="text-white">{curRowLength} records remaining...</div>
-        <SliderColumnFilter thisData={accessVar} setAccessVar={setAccessVar} thisMin={thisMin} thisMax={thisMax} setThisMax={setThisMax} setThisMin={setThisMin}/>
-    
-    <a href="#" class="relative inline-flex items-center justify-center inline-block p-4 px-5 py-3 overflow-hidden font-medium text-indigo-600 rounded-lg shadow-2xl group" onClick={() =>{
-        console.log("trying to update cur vals in holder array")
-        let newHolder=[...stateHolder]
-        let thisInd=stateHolder.findIndex(x=> x.accessor===accessVar.accessor)
-        newHolder[thisInd]=accessVar
-        setStateHolder(newHolder)
+      <Modal isOpen={modalVisible} ariaHideApp={false} onRequestClose={() => setModalVisible(false)} style={customStyles}>
+      <div className="bg-[url('coolbackgroundbw.png')] absolute inset-0 p-2 flex flex-col justify-center space-y-4">
+        <div className="text-white text-center">{getHeader(accessVar)}</div>
+        <SliderColumnFilter thisData={accessVar} setAccessVar={setAccessVar}/>
+        <div className="text-xl text-white font-extrabold text-center">{curRowLength} counties remaining...</div>
+    <button className="text-3xl font-extrabold text-white object-center w-fit align-middle border-2 border-slate-400 rounded-lg bg-slate-600 hover:bg-slate-800" onClick={() =>{
         setModalVisible(false)
         return false
-    }}>
-<span class="absolute top-0 left-0 w-40 h-40 -mt-10 -ml-3 transition-all duration-700 bg-red-500 rounded-full blur-md ease"></span>
-<span class="absolute inset-0 w-full h-full transition duration-700 group-hover:rotate-180 ease">
-<span class="absolute bottom-0 left-0 w-24 h-24 -ml-10 bg-purple-500 rounded-full blur-md"></span>
-<span class="absolute bottom-0 right-0 w-24 h-24 -mr-10 bg-pink-500 rounded-full blur-md"></span>
-</span>
-<span class="relative text-white">Close</span>
-</a>
+    }}>Close
+    </button>
     </div>
       </Modal>
       </div>
       <div>
-    <Table columns={columns} data={countyList} setModalVisible={setModalVisible} filterVar={filterVar} thisMin={thisMin} thisMax={thisMax} stateHolder={stateHolder} setAccessVar={setAccessVar} accessVar={accessVar} setThisMax={setThisMax} setThisMin={setThisMin} setCurRowLength={setCurRowLength}/>
+    <Table columns={columns} data={countyList} setModalVisible={setModalVisible} stateHolder={stateHolder} setAccessVar={setAccessVar} accessVar={accessVar} setCurRowLength={setCurRowLength}/>
     </div>
   </div>
   );

@@ -1,7 +1,4 @@
 import TableView from "./TableView";
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
-import NavDropdown from "react-bootstrap/NavDropdown";
 import './App.css'
 import Homepage from "./Homepage"
 import Navigation from "./Navigation"
@@ -10,10 +7,10 @@ import {
   BrowserRouter as Router,
   Route,
   Routes,
-  Link,
-  useParams
 } from "react-router-dom";
 
+
+//navbar with router to about page (homepage) and table view page
 function App() {
   return (
     <div className="app">

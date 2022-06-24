@@ -6,6 +6,7 @@ import { GlobalFilter, DefaultFilterForColumn} from "./Filter";
 import matchSorter from 'match-sorter'
 
 
+//initialize table wrapper
 const Styles = styled.div`
   /* This is required to make the table full-width */
   display: block;
@@ -58,7 +59,8 @@ const Styles = styled.div`
   }
 `
 
-export default function Table({ columns, data, modalVisible, setModalVisible, filterVar, setFilterVar, thisMin, thisMax, stateHolder, setAccessVar, accessVar, setCurRowLength}) {
+//initialize table with necessary states passed in, as well as necessary hooks
+export default function Table({ columns, data, setModalVisible, stateHolder, setAccessVar, accessVar, setCurRowLength}) {
   
   // Use the useTable Hook to send the columns and data to build the table
   const {
@@ -80,7 +82,7 @@ export default function Table({ columns, data, modalVisible, setModalVisible, fi
     setGlobalFilter,
     preGlobalFilteredRows,
     setFilter,
-    filterSet=new Set(['total_population', "median_household_income","mean_temp","rainfall","average_traffic_volume_per_meter_of_major_roadways","percent_some_college","violent_crime_rate"]),
+    filterSet=new Set(['total_population', "median_household_income","mean_temp","rainfall","average_traffic_volume_per_meter_of_major_roadways","percent_some_college","percent_unemployed_CDC"]),
   } = useTable({
     columns,
     data,
@@ -96,12 +98,14 @@ export default function Table({ columns, data, modalVisible, setModalVisible, fi
   
   );
 
+//custom function to show filter button and begin filtering process when clicked
+
   function RenderFilter(colVar) {
     if (filterSet.has(colVar.id)) {
     return <div>
-    <button class="w-full bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" onClick={() => {
+    <button className="w-full rounded-lg border-2 border-slate-600 hover:bg-white hover:opacity-40 p-1" onClick={() => {
       stateHolder.forEach(thisAccess => {
-        //console.log(thisAccess)
+        ////console.log(thisAccess)
         if (thisAccess.accessor === colVar.id) {
           setAccessVar(thisAccess)
         }
@@ -119,95 +123,45 @@ export default function Table({ columns, data, modalVisible, setModalVisible, fi
     setCurRowLength(rows.length)
   }, [rows])
 
+  //set filter when filter is changed
   useEffect(() => {
-    //console.log("filtervar: ", filterVar)
-    // This will now use our custom filter for age
     if (accessVar.accessor!=='') {
-      console.log(thisMin)
-      console.log(thisMax)
-      console.log("accessVaraccessor: ",accessVar.accessor," currentminmax: ",accessVar.currentMin," , ",accessVar.currentMax)
-      console.log(filters)
       setFilter(accessVar.accessor, [accessVar.currentMin,accessVar.currentMax])
-      /*filterArr.push([accessVar.currentMin,accessVar.currentMax])*/
-      //setFilter(accessVar.accessor, filterArr);
     }
-    
   }, [accessVar]);
 
-  /* 
-    Render the UI for your table
-    - react-table doesn't have UI, it's headless. We just need to put the react-table props from the Hooks, and it will do its magic automatically
-  */
- 
+ //render my custom react table
   return (
       <>
-      {/* Rendering Global Filter 
-      <pre>
-        <code>
-          {JSON.stringify(
-            {
-              pageIndex,
-              pageSize,
-              pageCount,
-              canNextPage,
-              canPreviousPage,
-              filters
-          
-              
-            
-            },
-            null,
-            2
-          )}
-        </code>
-      </pre>
-      */}
+      <div className='text-3xl text-slate-700 opacity-80 text-center font-extrabold'>Find your new home county!</div>
       <GlobalFilter
                preGlobalFilteredRows={preGlobalFilteredRows}
                globalFilter={filters.globalFilter}
                setGlobalFilter={setGlobalFilter}
              />
   <Styles>
+  <div className="relative border-2 rounded-md border-black">
       <div className="tableWrap">
-        <div class="relative">
+        
 
     <table {...getTableProps()}>
     <thead>
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map(column => (
-                <th {...column.getHeaderProps()} class="font-extrabold sticky top-0">
+                <th {...column.getHeaderProps()} className="font-extrabold sticky top-0">
                     <span {...column.getSortByToggleProps()} >
-                    <div class="rounded-lg border-2 border-slate-600 hover:bg-white hover:opacity-40 p-1">
+                    <div className="rounded-lg border-2 border-slate-600 hover:bg-white hover:opacity-40 p-1">
                       {column.render('Header')}
                       {/* Add a sort direction indicator */}
                       {column.isSorted
                         ? column.isSortedDesc
-                          ? ' 🔽'
-                          : ' 🔼'
+                          ? '🔽'
+                          : '🔼'
                         : ''}
                         </div>
                     </span>
-                    
-                  
-                  {/* Render the columns filter UI 
-                  <div>m
-                      <Button variant="primary" onClick={() => {
-                        stateHolder.forEach(thisAccess => {
-                          //console.log(thisAccess)
-                          if (thisAccess.accessor === column.id) {
-                            setAccessVar(thisAccess)
-                          }
-                        })
-                        setModalVisible(true)}}>
-                        Launch demo modal
-                      </Button>
-
-                  </div>
-                      */}
-           
                     {RenderFilter(column)}
-             
                 </th>
               ))}
             </tr>
@@ -217,7 +171,7 @@ export default function Table({ columns, data, modalVisible, setModalVisible, fi
         {page.map((row, i) => {
           prepareRow(row);
           return (
-            <tr {...row.getRowProps()} class="border-b dark:bg-gray-800 dark:border-gray-700 odd:bg-white even:bg-gray-50 odd:dark:bg-gray-800 even:dark:bg-gray-700 opacity-80 hover:opacity-100">
+            <tr {...row.getRowProps()} className="border-b dark:bg-gray-800 dark:border-gray-700 odd:bg-white even:bg-gray-50 odd:dark:bg-gray-800 even:dark:bg-gray-700 opacity-80 hover:opacity-100">
               {row.cells.map(cell => {
                 return <td {...cell.getCellProps()}>{cell.render("Cell")} </td>;
               })}

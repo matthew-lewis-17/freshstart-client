@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 
+//Custom navbar built with tailwind CSS
 const Navigation = () => {
   const [isOpen, toggle] = useState(false);
   const menuStyle = isOpen ? "block" : "hidden";
@@ -130,13 +131,13 @@ const Navigation = () => {
           <div className="text-lg fonr-extrabold sm:flex-grow text-white">
           <a
               href="/"
-              className="no-underline block mt-4 sm:inline-block sm:mt-0 text-teal-lighter hover:bg-slate-600 mr-4"
+              className="block mt-4 sm:inline-block sm:mt-0 text-teal-lighter font-extrabold hover:bg-slate-600 hover:border-4 hover:border-slate-600 mr-4"
             >
               Home
             </a>
             <a
               href="/about"
-              className="no-underline block mt-4 sm:inline-block sm:mt-0 text-teal-lighter hover:text-white mr-4"
+              className="block mt-4 sm:inline-block sm:mt-0 text-teal-lighter font-extrabold hover:bg-slate-600 hover:border-4 hover:border-slate-600 mr-4"
             >
               About
             </a>
