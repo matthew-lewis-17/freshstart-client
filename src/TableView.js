@@ -21,13 +21,14 @@ function TableView() {
   const [modalVisible, setModalVisible] = useState(false)
   //Holds all data from database
   const [countyList, setCountyList] = useState([]);
+  //accessor, min, max, current min, current max
   const [accessVar, setAccessVar]=useState(stateObj('',0,0,0,0))
   const [curRowLength, setCurRowLength] = useState(0)
 
   //empty useEffecr dependency automatically fetches data from API on load
   useEffect(()=>{
     if (countyList.length < 1) {
-    Axios.get('http://localhost:3001/api/get').then((response)=> {
+    Axios.get('https://freshstart-mysql.herokuapp.com/api/get').then((response)=> {
       setCountyList(response.data)
       //console.log(response.data[1])
       setLoading(false);
@@ -39,7 +40,7 @@ function TableView() {
   useEffect(()=>{
     if (countyList.length >0) {
       const tmp = []
-      const mySet1 = new Set("id")
+      const mySet1 = new Set()
       for (const [key,value] of Object.entries(countyList[0])) {
         if (!mySet1.has(key)) {
           mySet1.add(key)
