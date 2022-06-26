@@ -6,7 +6,6 @@
 
 
 .example-thumb {
-  font-size: 0.3em;
   text-align: center;
   background-color: #008793;
   color: white;
@@ -37,7 +36,7 @@
   width: 80px;
   height: 80px;
   line-height: 70px;
-  font-size:0.2em;
+  font-size:0.9em;
 }
 
 

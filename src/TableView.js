@@ -118,12 +118,12 @@ function TableView() {
             filter: filterBetween,
           },
           {
-            Header: "Percent College Graduates",
+            Header: "Adults with College Degree (Percentile)",
             accessor: "percent_some_college",
             filter: filterBetween,
           },
           {
-            Header: "Volume of Traffic Percentile",
+            Header: "Volume of Traffic (Percentile)",
             accessor: "average_traffic_volume_per_meter_of_major_roadways",
             filter: filterBetween,
 
