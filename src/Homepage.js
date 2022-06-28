@@ -8,7 +8,7 @@ function Homepage() {
       <>
     <div className="flex flex-col gap-6">
         <div className="text-5xl text-black font-extrabold text-center">
-            Looking to escape the Bay Area or Seattle? FreshStart is what you're looking for!
+            Looking to escape the Bay Area or Seattle? FreshStart can help you find your new home!
         </div>
         <div className="rounded-lg bg-slate-300 text-2xl text-black font-extrabold text-center opacity-80">
             Filter our detailed data set to find the perfect landing spot for you and your family. Discover affordable counties that fit all of your needs. Find the perfect place to raise your kids!
