@@ -9,7 +9,12 @@ module.exports = {
     "./src/Navigation.js"
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'soft-green': '#3b544e',
+        'soft-grey': '#ffffff',
+      },
+    },
   },
   plugins: [],
 }

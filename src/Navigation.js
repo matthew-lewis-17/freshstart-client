@@ -6,7 +6,7 @@ const Navigation = () => {
   const menuStyle = isOpen ? "block" : "hidden";
   return (
       <>
-    <div className="bg-[url('coolbackgroundbw.png')] font-sans antialiased" id="app">
+    <div className="bg-soft-green font-sans antialiased" id="app">
       <nav
         className="flex items-center justify-between flex-wrap p-6"
       >

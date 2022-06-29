@@ -37,8 +37,8 @@ const Styles = styled.div`
     td {
       margin: 0;
       padding: 0.5rem;
-      border-bottom: 1px solid black;
-      border-right: 1px solid black;
+      border-bottom: 1px solid #dedede;
+      border-right: 1px solid #dedede;
 
       /* The secret sauce */
       /* Each cell should grow equally */
@@ -103,7 +103,7 @@ export default function Table({ columns, data, setModalVisible, stateHolder, set
   function RenderFilter(colVar) {
     if (filterSet.has(colVar.id)) {
     return <div>
-    <button className="w-full rounded-lg border-2 border-slate-600 hover:bg-white hover:opacity-40 p-1" onClick={() => {
+    <button className="w-full rounded-lg border-2 border-black hover:bg-white hover:opacity-40 p-1" onClick={() => {
       stateHolder.forEach(thisAccess => {
         ////console.log(thisAccess)
         if (thisAccess.accessor === colVar.id) {
@@ -133,14 +133,9 @@ export default function Table({ columns, data, setModalVisible, stateHolder, set
  //render my custom react table
   return (
       <>
-      <div className='text-3xl text-slate-700 opacity-80 text-center font-extrabold'>Find your new home county!</div>
-      <GlobalFilter
-               preGlobalFilteredRows={preGlobalFilteredRows}
-               globalFilter={filters.globalFilter}
-               setGlobalFilter={setGlobalFilter}
-             />
+      <div className='text-3xl text-black text-center font-extrabold'>Find your new home county!</div>
   <Styles>
-  <div className="relative border-2 rounded-md border-black">
+  <div className="relative rounded-md border-black">
       <div className="tableWrap">
         
 
@@ -151,7 +146,7 @@ export default function Table({ columns, data, setModalVisible, stateHolder, set
               {headerGroup.headers.map(column => (
                 <th {...column.getHeaderProps()} className="font-extrabold sticky top-0">
                     <span {...column.getSortByToggleProps()} >
-                    <div className="rounded-lg border-2 border-slate-600 hover:bg-white hover:opacity-40 p-1">
+                    <div className="rounded-lg border-2 border-black hover:bg-white hover:opacity-40 p-1">
                       {column.render('Header')}
                       {/* Add a sort direction indicator */}
                       {column.isSorted
@@ -171,7 +166,7 @@ export default function Table({ columns, data, setModalVisible, stateHolder, set
         {page.map((row, i) => {
           prepareRow(row);
           return (
-            <tr {...row.getRowProps()} className="border-b dark:bg-gray-800 dark:border-gray-700 odd:bg-white even:bg-gray-50 odd:dark:bg-gray-800 even:dark:bg-gray-700 opacity-80 hover:opacity-100">
+            <tr {...row.getRowProps()} >
               {row.cells.map(cell => {
                 return <td {...cell.getCellProps()}>{cell.render("Cell")} </td>;
               })}

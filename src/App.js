@@ -14,7 +14,7 @@ import {
 function App() {
   return (
     <div className="app">
-    <div className="bg-[url('coolbackground.png')] min-h-screen text-gray-900 bg-cover">
+    <div className="bg-soft-grey min-h-screen text-gray-900 bg-cover">
         <Navigation/>
         <main className="min-w-screen mx-auto px-4 sm:px-6 lg:px-8 pt-4">
             <div>

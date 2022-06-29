@@ -7,15 +7,11 @@
 
 .example-thumb {
   text-align: center;
-  background-color: #008793;
+  background-color: #3b544e;
   color: white;
   cursor: grab;
   border-radius: 90%;
   box-sizing: content-box;
-}
-
-.example-thumb.active {
-  background-color: #010993;
 }
 
 .example-track {
@@ -24,7 +20,7 @@
 }
 
 .example-track.example-track-1 {
-  background: linear-gradient(to left top, #6bcfd1, #47c6dc, #28bce8, #2caff0, #51a0f2, #76a1f2, #91a2f0, #a8a3ed, #bfb9f2, #d5d0f6, #eae7fb, #ffffff);
+  background: #3b544e;
 }
 
 .horizontal-slider .example-track {
