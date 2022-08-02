@@ -8,13 +8,10 @@ function Homepage() {
       <>
     <div className="flex flex-col gap-6">
         <div className="text-5xl text-black font-extrabold text-center">
-            Looking to escape the Bay Area or Seattle? FreshStart can help you find your new home!
+            Looking to find a new place to settle down? FreshStart can help you find your new home!
         </div>
         <div className="rounded-lg text-2xl text-black font-extrabold text-center">
-            Filter our detailed data set to find the perfect landing spot for you and your family. Discover affordable counties that fit all of your needs. Find the perfect place to raise your kids!
-        </div>
-        <div className="rounded-lg text-base text-black text-center">
-            *This is v1.0.0 of this project, which is my first foray into JS, React, and full stack web development. Please reach out to me on LinkedIn or Github with any bug fixes, recommendations, ideas, or even entry level SWE positions that would be a good fit for me!
+            Filter this detailed data set to find the perfect landing spot for you and your family. Discover affordable counties that fit all of your needs. Find the perfect place to raise your kids!
         </div>
         <div className='grid grid-cols-3 gap-4 place-items-center'>
             <div className='hover:opacity-75'>
